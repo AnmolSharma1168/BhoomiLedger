@@ -9,7 +9,6 @@ const NAV = [
   { href: '/dashboard/transfer',    icon: '⇄', label: 'Transfer' },
   { href: '/dashboard/loans',       icon: '◎', label: 'DeFi Loans' },
   { href: '/dashboard/inheritance', icon: '⟡', label: 'Inheritance' },
-  { href: '/dashboard/admin-documents', icon: '⊟', label: 'Document Approvals' },
   { href: '/dashboard/reports',     icon: '◌', label: 'Reports' },
 ]
 

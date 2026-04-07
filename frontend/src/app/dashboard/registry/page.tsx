@@ -22,10 +22,7 @@ export default function RegistryPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [docParcel, setDocParcel] = useState<any>(null);
-  const [docName, setDocName] = useState("");
-  const [docFile, setDocFile] = useState<File | null>(null);
-  const [docLoading, setDocLoading] = useState(false);
+
 
   const load = async (q = "") => {
     setLoading(true);
@@ -60,20 +57,7 @@ export default function RegistryPage() {
     finally { setSaving(false); }
   };
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!docFile || !docParcel) return;
-    setDocLoading(true); setError(""); setSuccess("");
-    try {
-      await (api as any).uploadDocument(docParcel.parcelId, docFile, docName || docFile.name);
-      setSuccess(`Document uploaded to ${docParcel.parcelId}!`);
-      setDocName(""); setDocFile(null);
-      const updated = await api.getParcel(docParcel.parcelId);
-      setDocParcel(updated.parcel);
-      load();
-    } catch (e: any) { setError(e.message); }
-    finally { setDocLoading(false); }
-  };
+
 
   const fmt = (n: number) => n?.toLocaleString("en-IN") || "0";
   const statusColor: Record<string, string> = {
@@ -89,7 +73,7 @@ export default function RegistryPage() {
           <h1 style={{ fontFamily: "var(--font-body)", fontWeight: "300", fontSize: "40px", color: "var(--white)" }}>Land Registry</h1>
           <p style={{ color: "var(--white-mute)", fontSize: "16px", marginTop: "6px" }}>{total} parcels registered · MongoDB + Polygon Amoy</p>
         </div>
-        <button className="btn-gold" onClick={() => { setShowForm(!showForm); setError(""); setSuccess(""); setDocParcel(null); }}>
+        <button className="btn-gold" onClick={() => { setShowForm(!showForm); setError(""); setSuccess(""); }}>
           {showForm ? "✕ Cancel" : "+ Register Parcel"}
         </button>
       </div>
@@ -170,64 +154,7 @@ export default function RegistryPage() {
         </div>
       )}
 
-      {/* Document panel */}
-      {docParcel && (
-        <div className="card animate-fade-up" style={{ padding: "36px", marginBottom: "32px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-            <div className="section-heading">Documents — {docParcel.parcelId}</div>
-            <button className="btn-ghost" onClick={() => setDocParcel(null)}>✕ Close</button>
-          </div>
 
-          {docParcel.documents?.length > 0 ? (
-            <div style={{ marginBottom: "24px" }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.2em", color: "var(--gold-dim)", marginBottom: "12px" }}>UPLOADED DOCUMENTS</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                {docParcel.documents.map((doc: any, i: number) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--black-4)", border: "1px solid rgba(201,168,76,0.08)", padding: "12px 16px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "1.2rem" }}>{doc.url?.endsWith(".pdf") ? "📄" : "🖼️"}</span>
-                      <span style={{ fontSize: "0.9rem", color: "var(--white-dim)" }}>{doc.name}</span>
-                    </div>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <a href={`http://localhost:5000${doc.url}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ padding: "0.3rem 0.8rem", fontSize: "0.65rem", textDecoration: "none" }}>VIEW</a>
-                      <button className="btn-ghost" style={{ padding: "0.3rem 0.8rem", fontSize: "0.65rem", color: "#ef4444", borderColor: "#ef444444" }}
-                        onClick={async () => {
-                          try {
-                            await api.deleteDocument(docParcel.parcelId, i);
-                            setSuccess("Document deleted");
-                            const updated = await api.getParcel(docParcel.parcelId);
-                            setDocParcel(updated.parcel);
-                            load();
-                          } catch (e: any) { setError(e.message); }
-                        }}>DELETE</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <p style={{ color: "var(--white-mute)", fontSize: "0.9rem", marginBottom: "24px" }}>No documents uploaded yet.</p>
-          )}
-
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.2em", color: "var(--gold-dim)", marginBottom: "12px" }}>UPLOAD NEW DOCUMENT</div>
-          <form onSubmit={handleUpload}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-              <div>
-                <label className="label-luxury">Document Name</label>
-                <input className="input-luxury" value={docName} onChange={e => setDocName(e.target.value)} placeholder="e.g. Title Deed, Survey Map" />
-              </div>
-              <div>
-                <label className="label-luxury">File (PDF or Image, max 10MB)</label>
-                <input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" className="input-luxury"
-                  onChange={e => setDocFile(e.target.files?.[0] || null)} required style={{ paddingTop: "10px" }} />
-              </div>
-            </div>
-            <button type="submit" className="btn-gold" disabled={docLoading || !docFile}>
-              {docLoading ? "Uploading..." : "Upload Document →"}
-            </button>
-          </form>
-        </div>
-      )}
 
       {/* Search */}
       <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
@@ -264,7 +191,6 @@ export default function RegistryPage() {
                 <th>Value</th>
                 <th>Status</th>
                 <th>TX Hash</th>
-                <th>Docs</th>
               </tr>
             </thead>
             <tbody>
@@ -296,12 +222,7 @@ export default function RegistryPage() {
     <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--white-mute)" }}>—</span>
   )}
 </td>
-                  <td>
-                    <button className="btn-ghost" style={{ padding: "0.3rem 0.8rem", fontSize: "0.65rem" }}
-                      onClick={() => { setDocParcel(p); setShowForm(false); setSuccess(""); setError(""); }}>
-                      DOCS {p.documents?.length > 0 ? `(${p.documents.length})` : ""}
-                    </button>
-                  </td>
+
                 </tr>
               ))}
             </tbody>

@@ -116,51 +116,7 @@ export const api = {
       }
     ),
 
-  uploadDocument:(parcelId,file,docName)=>{
 
-    const token = getToken();
-
-    const formData = new FormData();
-
-    formData.append("document",file);
-    formData.append("docName",docName);
-
-    return fetch(
-
-      BASE_URL + "/parcels/" + parcelId + "/documents",
-
-      {
-        method:"POST",
-
-        headers:{
-          Authorization:"Bearer " + token
-        },
-
-        body:formData
-
-      }
-
-    )
-    .then(r=>r.json())
-    .then(d=>{
-
-      if(!d.success){
-        throw new Error(d.message);
-      }
-
-      return d;
-
-    });
-
-  },
-
-  deleteDocument:(parcelId,docIndex)=>
-    request(
-      "/parcels/" + parcelId + "/documents/" + docIndex,
-      {
-        method:"DELETE"
-      }
-    ),
 
   getTransfers:(params)=>
     request("/transfers?" + (params || "")),
@@ -268,27 +224,6 @@ export const api = {
       }
     ),
 
-  getMyDocuments:(params)=>
-    request("/documents/my-requests?" + (params || "")),
 
-  uploadDocument:(parcelId,documentName,documentType,file)=>{
-    const token = getToken();
-    const formData = new FormData();
-    formData.append("document", file);
-    formData.append("parcelId", parcelId);
-    formData.append("documentName", documentName);
-    formData.append("documentType", documentType);
-    
-    return fetch(BASE_URL + "/documents/upload", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token },
-      body: formData
-    })
-    .then(r => r.json())
-    .then(d => {
-      if (!d.success) throw new Error(d.message);
-      return d;
-    });
-  },
 
 };

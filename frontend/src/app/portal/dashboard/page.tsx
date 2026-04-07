@@ -66,8 +66,9 @@ export default function PortalDashboard() {
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "#888" }}>
             {user?.name} · <span style={{ color: "#d4af37" }}>{user?.role?.toUpperCase()}</span>
           </span>
-          <a href="/portal/dashboard/documents" className="btn-gold" style={{ padding: "0.3rem 0.8rem", fontSize: "0.65rem", textDecoration: "none", display: "inline-block" }}>📄 DOCUMENTS</a>
-          <button onClick={logout} className="btn-ghost" style={{ padding: "0.3rem 0.8rem", fontSize: "0.65rem" }}>LOGOUT</button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={logout} className="btn-ghost" style={{ padding: "0.3rem 0.8rem", fontSize: "0.65rem" }}>LOGOUT</button>
+          </div>
         </div>
       </nav>
 
