@@ -1,0 +1,256 @@
+================================================================================
+                  BHOOMILEDGER BLOCKCHAIN - REQUIREMENTS
+================================================================================
+
+SYSTEM REQUIREMENTS
+================================================================================
+- Node.js: v18.0.0 or higher
+- npm: v8.0.0 or higher
+- Git (for version control)
+
+RUNTIME DEPENDENCIES
+================================================================================
+
+Hardhat Framework:
+  - hardhat v2.22.0             Ethereum development environment
+  - ethers v5.x or v6.x         Ethereum library (to be installed)
+
+DEVELOPMENT DEPENDENCIES
+================================================================================
+- @nomicfoundation/hardhat-toolbox  Hardhat plugin bundle
+- hardhat-gas-reporter             Gas usage reporting
+- solidity-coverage                 Code coverage for Solidity
+
+SOLIDITY CONTRACTS
+================================================================================
+- Solidity v0.8.20
+  * LandRegistry.sol            Core registry for land parcels
+  * LandTransfer.sol            Land transfer escrow logic
+  * LandLoan.sol                DeFi loan management
+  * LandInheritance.sol         Will and inheritance management
+
+INSTALLATION
+================================================================================
+
+Navigate to blockchain directory:
+  cd blockchain
+
+Install dependencies:
+  npm install
+
+ENVIRONMENT SETUP
+================================================================================
+
+Create .env file in blockchain directory with:
+
+  Wallet:
+  WALLET_PRIVATE_KEY=your_private_key_here
+  WALLET_ADDRESS=0x8540Bc44e748d1bC90E3965136E596F1963713d9
+
+  Network:
+  POLYGON_AMOY_RPC_URL=https://rpc-amoy.polygon.technology
+  POLYGONSCAN_API_KEY=your_polygonscan_api_key
+
+  Deployment:
+  NETWORK=amoy
+
+POLYGON AMOY TESTNET CONFIGURATION
+================================================================================
+- Chain ID:        80002
+- RPC URL:         https://rpc-amoy.polygon.technology
+- Explorer:        https://amoy.polygonscan.com
+- Faucet:          https://faucet.polygon.technology/
+- Gas Token:       POL (formerly MATIC)
+- Current Wallet:  0x8540Bc44e748d1bC90E3965136E596F1963713d9
+
+COMPILATION
+================================================================================
+
+Compile all contracts:
+  npx hardhat compile
+
+View compiled artifacts:
+  ls artifacts/contracts/
+
+Expected Output:
+  - LandRegistry.json
+  - LandTransfer.json
+  - LandLoan.json
+  - LandInheritance.json
+
+DEPLOYMENT
+================================================================================
+
+Deploy all contracts (requires ~0.6 POL):
+  npx hardhat run scripts/deploy.cjs --network amoy
+
+Individual contract deployment:
+  npx hardhat run scripts/deploy-registry.cjs --network amoy
+  npx hardhat run scripts/deploy-transfer.cjs --network amoy
+  npx hardhat run scripts/deploy-loan.cjs --network amoy
+  npx hardhat run scripts/deploy-inheritance.cjs --network amoy
+
+SAVING CONTRACT ADDRESSES
+================================================================================
+
+After successful deployment, add addresses to backend/.env:
+
+  LAND_REGISTRY_ADDRESS=0x...
+  LAND_TRANSFER_ADDRESS=0x...
+  LAND_LOAN_ADDRESS=0x...
+  LAND_INHERITANCE_ADDRESS=0x...
+
+TESTING
+================================================================================
+
+Run all tests:
+  npx hardhat test
+
+Run tests with coverage report:
+  npx hardhat coverage
+
+KEY CONTRACT FUNCTIONS
+================================================================================
+
+LandRegistry Contract:
+  - registerParcel()             Register new land parcel
+  - transferOwnership()          Transfer parcel ownership
+  - getParcelDetails()           Fetch parcel information
+
+LandTransfer Contract:
+  - initiateTransfer()           Start escrow transfer
+  - verifyDocuments()            Verify transfer documents
+  - completeTransfer()           Finalize transfer
+  - cancelTransfer()             Cancel transfer
+
+LandLoan Contract:
+  - createLoan()                 Create loan against parcel
+  - recordRepayment()            Record EMI payment
+  - calculateEMI()               Calculate EMI amount
+  - foreclose()                  Foreclose on defaulted loan
+  - clearMortgage()              Clear paid-off mortgage
+
+LandInheritance Contract:
+  - createWill()                 Create inheritance will
+  - executeWill()                Execute will on condition
+  - revokeWill()                 Revoke active will
+  - addBeneficiary()             Add beneficiary to will
+  - removeBeneficiary()          Remove beneficiary from will
+
+HARDHAT CONFIGURATION
+================================================================================
+
+Config File: hardhat.config.cjs
+
+Features:
+  - Polygon Amoy testnet support
+  - Gas reporter enabled
+  - Solidity optimizer enabled (runs: 200)
+  - Source code verification support
+  - TypeScript support
+
+DEPLOYMENT CHECKLIST
+================================================================================
+
+Pre-Deployment:
+  [ ] Fund wallet with POL tokens (~0.6 POL minimum)
+  [ ] Create .env with private key and RPC URL
+  [ ] Verify .env is in .gitignore
+  [ ] Test hardhat network connection
+
+Deployment:
+  [ ] Compile contracts: npx hardhat compile
+  [ ] Run local tests: npx hardhat test
+  [ ] Deploy to Amoy: npx hardhat run scripts/deploy.cjs --network amoy
+  [ ] Note contract addresses from deployment output
+
+Post-Deployment:
+  [ ] Verify contract addresses returned
+  [ ] Update backend/.env with addresses
+  [ ] Verify on Polygonscan
+  [ ] Test contract interactions from backend
+
+Integration:
+  [ ] npm install ethers in backend
+  [ ] Create backend/utils/blockchain.js
+  [ ] Update backend routes to call real contracts
+  [ ] Test end-to-end transactions
+  [ ] Update frontend to display real TX hashes
+
+GETTING POL FOR TESTNET
+================================================================================
+
+Option 1 - Polygon Faucet:
+  1. Visit https://faucet.polygon.technology/
+  2. Select "Polygon Amoy" network
+  3. Enter your wallet address
+  4. Receive 0.5 POL
+
+Option 2 - QuickSwap Faucet:
+  1. Visit https://quickswap.exchange/
+  2. Use testnet faucet option
+  3. Request POL tokens
+
+Option 3 - Alchemy Faucet:
+  1. Visit https://www.alchemy.com/faucets/polygon-amoy
+  2. Connect wallet
+  3. Claim tokens
+
+NEXT STEPS
+================================================================================
+
+Phase 1 - Deployment:
+  1. Get POL from faucet
+  2. Deploy contracts to Amoy
+  3. Save contract addresses
+
+Phase 2 - Backend Integration:
+  1. Install ethers: npm install ethers
+  2. Create backend/utils/blockchain.js
+  3. Update all routes to use real contracts
+  4. Test contract interactions
+
+Phase 3 - Frontend Updates:
+  1. Update API responses to include real TX hashes
+  2. Display contract addresses on dashboard
+  3. Show Polygonscan links for transactions
+  4. Update transaction displays
+
+USEFUL LINKS
+================================================================================
+- Hardhat Docs:       https://hardhat.org/docs
+- Polygon Docs:       https://polygon.technology/developers
+- Solidity Docs:      https://docs.soliditylang.org/
+- Ethers.js Docs:     https://docs.ethers.org/v6/
+- Amoy Faucet:        https://faucet.polygon.technology/
+- Amoy Explorer:      https://amoy.polygonscan.com
+- Polygonscan API:    https://polygonscan.com/apis
+
+PROJECT STRUCTURE
+================================================================================
+blockchain/
+  ├── package.json                 Dependencies
+  ├── hardhat.config.cjs           Hardhat configuration
+  ├── tsconfig.json                TypeScript configuration
+  ├── .env                         Environment variables
+  ├── contracts/
+  │   ├── LandRegistry.sol         Core registry contract
+  │   ├── LandTransfer.sol         Transfer escrow contract
+  │   ├── LandLoan.sol             Loan management contract
+  │   └── LandInheritance.sol      Will management contract
+  ├── scripts/
+  │   ├── deploy.cjs               Main deployment script
+  │   ├── deploy-registry.cjs      Registry deployment
+  │   ├── deploy-transfer.cjs      Transfer deployment
+  │   ├── deploy-loan.cjs          Loan deployment
+  │   └── deploy-inheritance.cjs   Inheritance deployment
+  ├── test/
+  │   └── (test files)             Contract tests
+  ├── artifacts/
+  │   └── contracts/               Compiled contracts
+  └── cache/
+      └── compile-cache.json       Compilation cache
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================

@@ -1,0 +1,250 @@
+================================================================================
+                   BHOOMILEDGER FRONTEND - REQUIREMENTS
+================================================================================
+
+SYSTEM REQUIREMENTS
+================================================================================
+- Node.js: v18.0.0 or higher
+- npm: v8.0.0 or higher
+
+RUNTIME DEPENDENCIES
+================================================================================
+
+Framework & Core:
+  - next v16.2.2                React framework with SSR and optimization
+  - react v19.2.4               Frontend UI library
+  - react-dom v19.2.4           React DOM rendering
+
+Document Generation:
+  - jspdf v4.2.1                PDF generation from JavaScript
+  - jspdf-autotable v5.0.7      Auto-table plugin for jsPDF (PDF table formatting)
+
+DEVELOPMENT DEPENDENCIES
+================================================================================
+- typescript v6.0.2             TypeScript support
+
+STYLING
+================================================================================
+- Custom CSS (globals.css)      No Tailwind CSS
+- Google Fonts:
+  * Cinzel                      Display font (headings)
+  * Cormorant Garamond          Body font (text)
+  * DM Mono                     Monospace font (codes, details)
+
+INSTALLATION
+================================================================================
+
+Navigate to frontend directory:
+  cd frontend
+
+Install dependencies:
+  npm install
+
+ENVIRONMENT SETUP
+================================================================================
+
+Create .env.local file in frontend directory with:
+
+  NEXT_PUBLIC_API_URL=http://localhost:5000/api
+
+RUNNING THE FRONTEND
+================================================================================
+
+Development Mode:
+  npm run dev
+  Frontend runs on http://localhost:3000
+
+Production Build:
+  npm run build
+  npm start
+
+PAGES & ROUTES
+================================================================================
+
+Admin Dashboard:
+  /login                        Admin login page
+  /dashboard                    Overview with live statistics
+  /dashboard/registry           Land parcel registration & management
+  /dashboard/transfer           Land transfer management
+  /dashboard/loans              Loan management & EMI calculator
+  /dashboard/inheritance        Will management
+  /dashboard/reports            Analytics & PDF export
+
+Citizen Portal:
+  /portal/login                 Citizen login/registration
+  /portal/dashboard             Citizen dashboard
+    - View own parcels
+    - View own transfers
+    - View own loans
+    - Search land records
+    - Verify parcel records
+
+API INTEGRATION
+================================================================================
+
+API Client: /src/lib/api.js
+
+Auth Tokens:
+  - Admin:   localStorage key "bl_token"
+  - Citizen: localStorage key "bl_portal_token"
+
+Available Methods:
+  api.login(email, password)                    Admin login
+  api.register(name, email, password)           User registration
+  api.me()                                      Get current user
+  api.stats()                                   Get dashboard stats
+  api.getParcels(params)                        List parcels
+  api.getParcel(id)                             Get single parcel
+  api.createParcel(data)                        Create parcel (admin)
+  api.updateParcel(id, data)                    Update parcel (admin)
+  api.deleteParcel(id)                          Delete parcel (admin)
+  api.getTransfers(params)                      List transfers
+  api.createTransfer(data)                      Create transfer (admin)
+  api.advanceTransfer(id, data)                 Advance transfer step
+  api.getLoans(params)                          List loans
+  api.createLoan(data)                          Create loan (admin)
+  api.repayLoan(id, amount)                     Record loan repayment
+  api.getWills(params)                          List wills
+  api.createWill(data)                          Create will (admin)
+  api.executeWill(id)                           Execute will (admin)
+  api.revokeWill(id)                            Revoke will (admin)
+  api.uploadDocument(parcelId, file, docName)   Upload document (admin)
+  api.deleteDocument(parcelId, docIndex)        Delete document (admin)
+
+KEY FEATURES
+================================================================================
+
+Authentication:
+  - Admin JWT login/logout
+  - Citizen self-registration
+  - Token-based session management
+  - Persistent login across sessions
+
+Land Registry:
+  - Parcel registration with document upload
+  - View and manage land records
+  - Generate mock blockchain TX hashes
+  - Document storage and management
+  - Search and filter parcels
+  - Verify land records
+
+Land Transfers:
+  - 4-step escrow transfer process:
+    1. Documents Verification
+    2. Payment Pending
+    3. Payment Done
+    4. Completed
+  - Real-time status tracking
+  - Transaction hash display
+
+Loans:
+  - DeFi loan creation and management
+  - EMI calculation
+  - Monthly repayment tracking
+  - Mortgage status management
+  - Foreclosure on default
+
+Inheritance:
+  - Multi-beneficiary will creation
+  - Share percentage management
+  - Will execution and revocation
+  - Condition-based execution:
+    * On-death
+    * On-date
+    * Manual
+
+Reports:
+  - Dashboard statistics and metrics
+  - Analytics visualization
+  - PDF export functionality
+  - Charts and graphs
+  - Historical data tracking
+
+DESIGN SYSTEM
+================================================================================
+
+Color Palette:
+  - Primary Black:    #080808   Main background
+  - Gold Accent:      #c9a84c   Highlights, buttons
+  - Text White:       #f5f0e8   Main text color
+  - Subtle Border:    #d4af3722 Borders with transparency
+
+Typography (CSS Variables):
+  - --font-display               Cinzel (headings)
+  - --font-body                  Cormorant Garamond (body text)
+  - --font-mono                  DM Mono (monospace)
+
+CSS Classes:
+  - btn-gold                     Gold button style
+  - btn-ghost                    Ghost/outline button style
+  - card                         Card container
+  - table-luxury                 Luxury table styling
+  - badge                        Status badge
+  - input-luxury                 Luxury input field
+  - label-luxury                 Luxury label
+  - section-heading              Section heading
+  - mono                         Monospace text
+  - stat-card                    Statistics card
+  - dash-content                 Dashboard content area
+  - form-card                    Form container card
+
+RESPONSIVE DESIGN
+================================================================================
+- Mobile-first approach
+- Tablet optimization (768px+)
+- Desktop optimization (1200px+)
+- All pages responsive
+
+PERFORMANCE OPTIMIZATIONS
+================================================================================
+- No Tailwind CSS (custom CSS only)
+- Optimized images with Next.js
+- TypeScript for type safety
+- Component-based architecture
+- Efficient state management
+- Lazy loading for large datasets
+
+BROWSER SUPPORT
+================================================================================
+- Chrome/Chromium (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+PROJECT STRUCTURE
+================================================================================
+frontend/
+  ├── package.json               Dependencies
+  ├── tsconfig.json              TypeScript configuration
+  ├── next-env.d.ts              Next.js TypeScript definitions
+  └── src/
+      ├── lib/
+      │   └── api.js             API client methods
+      └── app/
+          ├── globals.css        Global styles & design system
+          ├── layout.tsx         Root layout
+          ├── page.tsx           Home page
+          ├── login/
+          │   └── page.tsx       Admin login
+          ├── dashboard/
+          │   ├── layout.tsx     Dashboard layout
+          │   ├── page.tsx       Dashboard overview
+          │   ├── registry/
+          │   │   └── page.tsx   Parcel registry
+          │   ├── transfer/
+          │   │   └── page.tsx   Transfer management
+          │   ├── loans/
+          │   │   └── page.tsx   Loan management
+          │   ├── inheritance/
+          │   │   └── page.tsx   Will management
+          │   └── reports/
+          │       └── page.tsx   Reports & analytics
+          └── portal/
+              ├── login/
+              │   └── page.tsx   Citizen login/register
+              └── dashboard/
+                  └── page.tsx   Citizen dashboard
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================

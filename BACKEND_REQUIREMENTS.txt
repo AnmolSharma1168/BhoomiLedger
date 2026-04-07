@@ -1,0 +1,192 @@
+================================================================================
+                    BHOOMILEDGER BACKEND - REQUIREMENTS
+================================================================================
+
+SYSTEM REQUIREMENTS
+================================================================================
+- Node.js: v18.0.0 or higher
+- npm: v8.0.0 or higher
+- MongoDB: v5.0 or higher (running locally on port 27017)
+- Windows Administrator access (for MongoDB service management)
+
+RUNTIME DEPENDENCIES
+================================================================================
+
+Core Framework:
+  - express v4.18.2             Web application framework
+  - mongoose v8.0.3             MongoDB object modeling
+
+Authentication & Security:
+  - bcryptjs v2.4.3             Password hashing
+  - jsonwebtoken v9.0.2         JWT token generation and verification
+
+File Handling:
+  - multer v1.4.5-lts.1         Multipart file upload handling
+
+Utilities:
+  - uuid v9.0.0                 Unique identifier generation
+  - dotenv v16.3.1              Environment variable management
+  - cors v2.8.5                 Cross-Origin Resource Sharing
+  - nodemailer v8.0.4           Email sending
+
+DEVELOPMENT DEPENDENCIES
+================================================================================
+- nodemon v3.0.2               Auto-restart on file changes
+
+INSTALLATION
+================================================================================
+
+Navigate to backend directory:
+  cd backend
+
+Install dependencies:
+  npm install
+
+ENVIRONMENT SETUP
+================================================================================
+
+Create .env file in backend directory with:
+
+  PORT=5000
+  MONGODB_URI=mongodb://127.0.0.1:27017/bhoomiledger
+  JWT_SECRET=your_jwt_secret_key_here
+  EMAIL_USER=your_email@gmail.com
+  EMAIL_PASS=your_app_password
+  NODE_ENV=development
+
+  Blockchain (after deployment):
+  LAND_REGISTRY_ADDRESS=0x...
+  LAND_TRANSFER_ADDRESS=0x...
+  LAND_LOAN_ADDRESS=0x...
+  LAND_INHERITANCE_ADDRESS=0x...
+
+RUNNING THE BACKEND
+================================================================================
+
+Development Mode:
+  npm run dev
+  Server runs on http://localhost:5000
+
+Production Mode:
+  npm start
+
+DATABASE SETUP
+================================================================================
+
+Start MongoDB service (Windows):
+  Start-Service MongoDB
+
+Seed admin user:
+  curl -X POST http://localhost:5000/api/auth/seed
+
+Admin Credentials:
+  Email: admin@bhoomi.com
+  Password: Admin@1234
+  Role: admin
+
+KEY API ENDPOINTS
+================================================================================
+
+Authentication:
+  POST   /api/auth/login              Admin login
+  POST   /api/auth/register           User registration
+  GET    /api/auth/me                 Get current user
+
+Land Registry:
+  GET    /api/parcels                 Get all/filtered parcels
+  GET    /api/parcels/:id             Get single parcel
+  POST   /api/parcels                 Create parcel (admin only)
+  PATCH  /api/parcels/:id             Update parcel (admin only)
+  DELETE /api/parcels/:id             Delete parcel (admin only)
+  POST   /api/parcels/:id/documents   Upload document (admin only)
+
+Land Transfers:
+  GET    /api/transfers               Get transfers
+  GET    /api/transfers/:id           Get single transfer
+  POST   /api/transfers               Create transfer (admin only)
+  PATCH  /api/transfers/:id/step      Advance transfer step (admin only)
+
+Loans:
+  GET    /api/loans                   Get loans
+  GET    /api/loans/:id               Get single loan
+  POST   /api/loans                   Create loan (admin only)
+  PATCH  /api/loans/:id/repay         Record repayment (admin only)
+
+Inheritance:
+  GET    /api/inheritance             Get wills
+  GET    /api/inheritance/:id         Get single will
+  POST   /api/inheritance             Create will (admin only)
+  PATCH  /api/inheritance/:id/execute Execute will (admin only)
+  PATCH  /api/inheritance/:id/revoke  Revoke will (admin only)
+
+Dashboard:
+  GET    /api/dashboard/stats         Get dashboard statistics
+
+MIDDLEWARE
+================================================================================
+- Auth protection on all protected routes
+- Admin-only routes with role verification  
+- CORS enabled for frontend communication
+- JWT verification on bearer tokens
+
+DATA VALIDATION
+================================================================================
+- Parcel creation requires: ownerName, ownerAddress, location, area, landType
+- Transfer creation requires: parcelId, seller, buyer, saleAmount
+- Loan creation requires: parcelId, borrowerName, borrowerWallet, principal, 
+  interestRate, tenureMonths
+- Will creation requires: testatorName, testatorWallet, parcelIds, beneficiaries
+
+USER ROLES
+================================================================================
+- admin: Full system access, can manage all records
+- officer: Admin-level access
+- user: Citizen, can only view/manage their own data
+
+DATA ACCESS CONTROL
+================================================================================
+- Admin users: See all records
+- Citizen users: See only their own:
+  * Parcels (where ownerId matches)
+  * Transfers (where they are seller or buyer)
+  * Loans (where borrowerId matches)
+  * Wills (where testatorId matches)
+
+FILE UPLOADS
+================================================================================
+- Path: /backend/uploads/parcels/
+- File size limit: 10MB
+- Allowed formats: PDF, JPG, JPEG, PNG, WEBP
+- Document storage linked to parcel records
+
+PROJECT STRUCTURE
+================================================================================
+backend/
+  ├── server.js                Main entry point
+  ├── package.json             Dependencies
+  ├── .env                     Environment variables
+  ├── middleware/
+  │   └── auth.js              JWT and role middleware
+  ├── models/
+  │   ├── User.js              User model with password hashing
+  │   ├── Parcel.js            Land parcel model
+  │   ├── Transfer.js          Transfer escrow model
+  │   ├── Loan.js              Loan model
+  │   └── Inheritance.js       Will/inheritance model
+  ├── routes/
+  │   ├── auth.js              Authentication endpoints
+  │   ├── parcels.js           Parcel management endpoints
+  │   ├── transfers.js         Transfer management endpoints
+  │   ├── loans.js             Loan management endpoints
+  │   ├── inheritance.js       Inheritance management endpoints
+  │   └── dashboard.js         Dashboard statistics endpoints
+  ├── utils/
+  │   ├── mailer.js            Email notifications
+  │   ├── mockChain.js         Mock blockchain TX hash generation
+  │   └── blockchain.js        (To be created) Real blockchain integration
+  └── uploads/
+      └── parcels/             Document storage
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================
